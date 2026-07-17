@@ -52,5 +52,6 @@ public class Member extends User {
         } else {
             System.out.println(getName() + " has reached the borrowing limit.");
         }
+        return false;
     }
 }

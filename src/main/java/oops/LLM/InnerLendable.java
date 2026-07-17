@@ -5,6 +5,6 @@ package main.java.oops.LLM;
  */
 public interface InnerLendable {
     boolean lend(User user);
-    void returnBook(user user);
+    void returnBook(User user);
     boolean isAvailable();
 }
