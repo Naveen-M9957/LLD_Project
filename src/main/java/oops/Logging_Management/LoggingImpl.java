@@ -10,7 +10,7 @@ public class LoggingImpl implements Logger {
     private LoggingImpl() {
         // Private constructor to prevent instantiation
     }
-    public static LoggingImpl getInstance() {
+    public static Logger getInstance() {
         if (instance == null) {
             synchronized (LoggingImpl.class) {
                 if (instance == null) {
@@ -42,11 +42,11 @@ public class LoggingImpl implements Logger {
     }
 
     @Override
-    public void setLogFile(String filePath) {
-        if(logWriter != null) {
-            logWriter.close(); // Close the previous log writer if it exists
-        }
+    public void setLogFile(String filePath) {        
         try {
+            if(logWriter != null) {
+                logWriter.close(); // Close the previous log writer if it exists
+            }
             this.logFilePath = filePath;
             this.logWriter = new PrintWriter(filePath);
         } catch (FileNotFoundException e) {
@@ -56,6 +56,9 @@ public class LoggingImpl implements Logger {
 
     @Override
     public String getLogFile() {
+        if(logFilePath == null) {
+            throw new IllegalStateException("Log file is not set. Please set the log file before getting the log file path.");
+        }
         return logFilePath;
     }
 
