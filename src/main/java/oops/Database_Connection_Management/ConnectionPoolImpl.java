@@ -59,7 +59,7 @@ public class ConnectionPoolImpl implements ConnectionPool {
         for (int i = 0; i < maxConnections; i++) {
             if (connections[i] == connection) {
                 connectionInUse[i] = false;
-                break;
+                return;
             }
         }
         throw new IllegalArgumentException("Connection does not belong to this pool");
