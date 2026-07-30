@@ -1,0 +1,169 @@
+
+/**
+ * Imagine you're designing a User class.
+ */
+
+public class User {
+    private String firstName;
+    private String lastName;
+    private int age;
+    private String email;
+    private String phone;
+    private String address;
+
+    public User(String firstName, String lastName, int age, String email, String phone, String address) {
+        this.firstName = firstName;
+        this.lastName = lastName;
+        this.age = age;
+        this.email = email;
+        this.phone = phone;
+        this.address = address;
+    }
+}
+
+/**
+ * How would you create an object?
+ * Option 1: Constructor
+*/
+User user = new User(
+        "John",
+        "Doe",
+        25,
+        "john@gmail.com",
+        "9876543210",
+        "Bangalore"
+    );
+
+/**Looks fine initially.
+
+ * Now suppose the next requirement says:
+
+* Phone is optional.
+* Address is optional.
+* Age is optional.
+* You'll end up with constructor overloading:
+ */
+
+User(String firstName, String lastName)
+
+User(String firstName, String lastName, int age)
+
+User(String firstName, String lastName, int age, String email)
+
+User(String firstName, String lastName, int age, String email, String phone)
+
+/**
+ * This is called the "Telescoping Constructor" problem.
+
+Problems with telescoping constructors:
+
+1. Too many constructors.
+2. Difficult to maintain.
+3. Easy to pass arguments in the wrong order.
+ */
+
+//Another option is setters.
+User user = new User();
+user.setFirstName("John");
+user.setLastName("Doe");
+user.setAge(25);
+user.setEmail("john@gmail.com");
+
+/**
+ * Problems with setters:
+ * Suppose another thread gets this object before all setters are called.
+ */
+User user = new User();
+
+user.setFirstName("John");
+
+// another thread reads the object here
+
+user.setLastName("Doe");
+
+/**
+ * The object is in an incomplete state.
+ * Also, setters make objects mutable.
+ * If someone later does:
+ */
+
+/**
+ * Builder solves these issues.
+
+Instead of constructing the object directly:
+ */
+
+User user =
+    new User.Builder()
+        .setFirstName("John")
+        .setLastName("Doe")
+        .setAge(25)
+        .setEmail("john@gmail.com")
+        .build();
+
+/**
+ * Advantages:
+
+1. Readable
+2. Optional fields are easy to omit.
+3. No constructor explosion.
+4. Immutable objects.
+5. Validation before object creation.
+ */
+
+// Thumb rules: When should you use Builder? 
+/**
+ * Use Builder when:
+
+1. A class has many fields (typically 5 or more).
+2. There are many optional parameters.
+3. You want immutable objects.
+4. Constructor overloading is becoming excessive.
+5. Object creation involves validation.
+6. You want fluent APIs (method chaining).
+ */
+
+
+/**
+ * Avoid Builder when:
+
+1. The class has only 2–3 required fields.
+2. Object creation is simple.
+3. There are no optional parameters.
+ */
+
+//A constructor is often sufficient for simple cases.
+
+/**
+ * Builder structure
+ * There are usually two classes involved:
+ */
+
++-------------------+
+|       User        |
++-------------------+
+| firstName         |
+| lastName          |
+| age               |
+| email             |
++-------------------+
+          ▲
+          |
++-------------------+
+|      Builder      |
++-------------------+
+| firstName         |
+| lastName          |
+| age               |
+| email             |
++-------------------+
+| setFirstName()    |
+| setLastName()     |
+| setAge()          |
+| setEmail()        |
+| build()           |
++-------------------+
+
+The Builder collects values.
+
+build() creates the final immutable object.
