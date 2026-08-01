@@ -1,0 +1,60 @@
+        Prototype Design Pattern
+---------------------------------------------
+
+What is the Prototype Design Pattern?
+    Answer: Prototype is a Creational Design Pattern that creates new objects by cloning an existing object instead of creating them from scratch.
+
+It is useful when:
+    Object creation is expensive.
+    Objects have many configurations.
+    Runtime object creation is required.
+
+
+Why use Prototype instead of new?
+Answer:
+    Avoids expensive initialization.
+    Reduces object creation overhead.
+    Allows runtime duplication of configured objects.
+    Useful in game engines, networking stacks, GUI frameworks.
+
+
+"How are Factory and Prototype different?"
+Factory	                            Prototype
+Creates new object	            Clones existing object
+Uses constructor	            Uses copy/clone
+Object type known	            Runtime duplication
+Creation logic centralized	    Object creates its own copy
+
+
+
+        Registry Design Pattern
+---------------------------------------------
+Registry is often asked after Singleton because it is a collection of Singletons/objects.
+
+What is Registry Design Pattern?
+    Answer: Registry provides a central location where objects are stored and retrieved by key.
+
+Think of it like:
+    std::map<string, T>
+
+Where is Registry pattern used in real systems?
+    Answer: Linux Device Driver Model
+Device Registry
+    ├── UART
+    ├── SPI
+    ├── I2C
+    └── USB
+
+Codec Framework
+Registry
+    -> H264 Decoder
+    -> HEVC Decoder
+    -> AV1 Decoder
+
+Very Common Interview Question
+"How are Singleton and Registry different?"
+
+Singleton	                            Registry
+One global object	                Collection of objects
+Single instance	                    Many instances
+Accessor returns one object	        Accessor returns object by key
