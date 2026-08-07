@@ -1,0 +1,154 @@
+
+
+****************************************************************
+Abstarct Factory Design Pattern
+****************************************************************
+Why Factory is Not Enough?
+Let's continue with the Notification example.
+Suppose your application supports:
+
+India Region
+    Email
+    SMS
+
+US Region
+    Email
+    PUSH
+
+EU Region
+    Email
+    SMS
+
+Each region has different implementations.
+
+Factory Approach
+1. NotificationFactory.create("EMAIL");
+2. NotificationFactory.create("SMS");
+
+if(region.equals("INDIA")) {
+    if(type.equals("EMAIL"))
+        return new IndianEmail();
+}
+
+if(region.equals("US")) {
+    if(type.equals("EMAIL"))
+        return new USEmail();
+}
+
+Abstract Factory Solution
+    Ask: 
+    Give me a family of notification products
+    for India
+
+The factory returns:
+Indian Email
+Indian SMS
+
+Step 1: Product Interfaces
+
+    Email :-
+        public interface EmailNotification {
+            void sendEmail(String msg);
+        }
+
+    SMS:-
+        public interface SMSNotification {
+            void sendEmail(String msg);
+        }
+
+Step 2: India Products
+    public class IndiaEmail implements EmailNotification {
+        @Override
+        public void sendEmail(String msg) {
+            System.out.println("India Email : " + msg);
+        }
+    }
+
+    public class IndiaSms implements SMSNotification {
+        @Override
+        public void sendSms(String msg) {
+            System.out.println("India Sms : " + msg);
+        }
+    }
+
+Step 3: US Products
+    public class UsEmail implements EmailNotification {
+        @Override
+        public void sendEmail(String msg) {
+            System.out.println("US Email : " + msg);
+        }
+    }
+
+    public class UsSms implements SMSNotification {
+        @Override
+        public void sendSms(String msg) {
+            System.out.println("US Sms : " + msg);
+        }
+    }
+
+Step 4: Abstract Factory
+Notice this factory creates multiple related products.
+
+public interface NotificationFactory {
+    EmailNotification createEmail();
+    SmsNotification createSms();
+}
+
+Step 5: Concrete Factories
+India Factory
+
+    public class IndiaFactory implements NotificationFactory {
+        @Override
+        public EmailNotification createEmail() {
+            return new IndiaEmail();
+        }
+
+        @Override
+        public SmsNotification createSms() {
+            return new IndiaSms();
+        }
+    }
+
+Step 6: Concrete Factories
+US Factory
+
+    public class UsFactory implements NotificationFactory {
+        @Override
+        public EmailNotification createEmail() {
+            return new UsEmail();
+        }
+
+        @Override
+        public SmsNotification createSms() {
+            return new UsSms();
+        }
+    }
+
+Step 7: Client Code
+
+    NotificationFactory factory =
+        new IndiaFactory();
+
+    EmailNotification email =
+            factory.createEmail();
+
+    SmsNotification sms =
+            factory.createSms();
+
+    email.sendEmail("Welcome");
+    sms.sendSms("OTP : 1234");
+
+
+Advantages
+--------------------
+/**
+ * 1. Creates families of related objects.
+ *
+ * 2. Ensures compatible products.
+ *
+ * 3. Hides concrete implementations.
+ *
+ * 4. Easy to switch platforms.
+ *
+ * 5. Follows Open Closed Principle.
+ */

@@ -1,4 +1,8 @@
+                    Factory and Abstarct Factory
+
+****************************************************************
 Factory Design Pattern
+****************************************************************
 ====================================
 
 /**
@@ -61,3 +65,73 @@ Problems
 } else if(type.equals("PUSH")) {
     notification = new PushNotification();
 }
+
+Problem with this approch 
+/**
+ * 1. Tight coupling.
+ * 2. Every caller contains object creation logic.
+ * 3. Difficult to extend.
+ * 4. Violates Open Closed Principle.
+ */
+
+ Factory Solution
+ ********************************
+ Step 1: Common Interface
+    public interface Notification {
+        void send(String message);
+    }
+
+Step 2: Concrete Implementations
+
+    public class EmailNotification implements Notification {
+        @Override
+        public void send(String message) {
+            System.out.println("Email: " + message);
+        }
+    }
+
+    public class SmsNotification implements Notification {
+        @Override
+        public void send(String message) {
+            System.out.println("SMS: " + message);
+        }
+    }
+
+    public class PushNotification implements Notification {
+        @Override
+        public void send(String message) {
+            System.out.println("PUSH: " + message);
+        }
+    }
+
+
+Advantages
+
+/**
+ * 1. Hides object creation.
+ * 2. Reduces coupling.
+ * 3. Easier to extend.
+ * 4. Client depends on interface.
+ * 5. Centralized creation logic.
+ */
+
+ Thumb Rules: When Should You Use Factory?
+ ----------------------------------------------
+ /**
+ * Use Factory when:
+ *
+ * 1. Object creation is complex.
+ *
+ * 2. Multiple implementations exist.
+ *
+ * 3. Client should not know
+ *    concrete classes.
+ *
+ * 4. Creation logic is repeated
+ *    across the application.
+ *
+ * 5. Future implementations
+ *    may be added.
+ */
+
+
