@@ -1,0 +1,63 @@
+Factory Design Pattern
+====================================
+
+/**
+ * Imagine you're designing a Notification system.
+ *
+ * Requirement:
+ * Send notifications through different channels:
+ * 1. Email
+ * 2. SMS
+ * 3. Push Notification
+ */
+
+public class EmailNotification {
+    public void send(String message) {
+        System.out.println("Email: " + message);
+    }
+}
+
+public class SmsNotification {
+    public void send(String message) {
+        System.out.println("SMS: " + message);
+    }
+}
+
+public class PushNotification {
+    public void send(String message) {
+        System.out.println("Push: " + message);
+    }
+}
+
+Option 1: 
+    Direct Object Creation
+    EmailNotification notification = new EmailNotification();
+    notification.send("Order Delivered");
+
+Later:
+    SmsNotification notification =  new SmsNotification();
+    notification.send("OTP: 1234");
+
+Later:
+    PushNotification notification =  new PushNotification();
+    notification.send("New Message");
+
+Problems
+/**
+ * Every client must know:
+ *
+ * 1. Which class to instantiate
+ * 2. How to create it
+ * 3. When new notification types are added,
+ *    client code must change.
+ */
+
+ Example:
+ ------------------
+ if(type.equals("EMAIL")) {
+    notification = new EmailNotification();
+} else if(type.equals("SMS")) {
+    notification = new SmsNotification();
+} else if(type.equals("PUSH")) {
+    notification = new PushNotification();
+}
