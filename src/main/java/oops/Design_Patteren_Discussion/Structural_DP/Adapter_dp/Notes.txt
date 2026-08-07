@@ -1,0 +1,118 @@
+
+*****************************************************
+Adapter Design Pattern
+*****************************************************
+
+
+What problem does Adapter solve?
+
+Imagine your infotainment system already has a Wi-Fi module interface.
+
+public interface WifiManager {
+    void connect();
+}
+
+Current implementation:
+
+public class QualcommWifiManager implements WifiManager {
+    @Override
+    public void connect() {
+        System.out.println("Connecting via Qualcomm WiFi");
+    }
+}
+
+New Requirement
+    Now the platform changes Qcom --> NXP
+
+NXP provides a third-party library:
+
+    public class NxpWifiDriver {
+        public void establishConnection() {
+            System.out.println(
+                "Connecting via NXP WiFi");
+        }
+    }
+
+Note: if you notice carefully Qcom has its own interface for connection and NXP has its own. 
+
+
+Option 1: Modify Client Code
+    NxpWifiDriver nxp = new NxpWifiDriver();
+    nxp.establishConnection();
+
+Problems
+/**
+ * Client now knows NXP API.
+ *
+ * Tomorrow:
+ *     BroadcomWifiDriver
+ *
+ * Again modify client.
+ *
+ * Tight coupling.
+ */
+
+
+Adapter Solution
+----------------------------
+Create a class that converts:
+
+Expected Interface
+        ↓
+WifiManager
+        ↓
+Adapter
+        ↓
+NxpWifiDriver
+
+
+1. Existing Interface (Target)
+
+public interface WifiManager {
+    void connect();
+}
+
+2. Third-Party Class (Adaptee)
+
+public class NxpWifiDriver {
+    public void establishConnection() {
+        System.out.println("Connecting via NXP WiFi");
+    }
+}
+
+3. Adapter
+
+public class NxpWifiAdapter implements WifiManager {
+
+    private final NxpWifiDriver driver;
+
+    public NxpWifiAdapter(NxpWifiDriver driver) {
+        this.driver = driver;
+    }
+
+    @Override
+    public void connect() {
+        driver.establishConnection();
+    }
+}
+
+4. Client Code 
+
+    WifiManager wifi = new NxpWifiAdapter(new NxpWifiDriver());
+    wifi.connect();
+
+
+Advantages
+----------------------
+/**
+ * 1. No client code changes.
+ *
+ * 2. Reuse third-party libraries.
+ *
+ * 3. Decouples old and new systems.
+ *
+ * 4. Works with legacy code.
+ *
+ * 5. Follows Open/Closed Principle.
+ */
+
