@@ -1,0 +1,113 @@
+
+        Decorator Design Pattern (ELI10)
+
+Imagine you have a plain pizza 🍕.
+
+Plain pizza = Base object
+Add cheese = Decorator
+Add olives = Another decorator
+Add mushrooms = Yet another decorator
+
+You keep wrapping the pizza with extra toppings without changing the original pizza class.
+
+That's exactly what the Decorator Pattern does:
+    It adds new behavior to an object dynamically without modifying the object's code.
+
+
+Example: Vehicle Features
+    
+1. Component Interface
+    interface Vehicle {
+        String getDescription();
+    }
+
+2. Concrete Component
+    class BasicCar implements Vehicle {
+        @Override
+        public String getDescription() {
+            return "Basic Car";
+        }
+    }
+
+3. abstract Decorator
+    abstract class VehicleDecorator implements Vehicle {
+        protected Vehicle vehicle;
+        public VehicleDecorator(Vehicle vehicle) {
+            this.vehicle = vehicle;
+        }
+    }
+
+4. Concrete Decorators
+Electric Feature
+
+    class ElectricDecorator extends VehicleDecorator {
+
+        public ElectricDecorator(Vehicle vehicle) {
+            super(vehicle);
+        }
+
+        @Override
+        public String getDescription() {
+            return vehicle.getDescription() + " + Electric System";
+        }
+    }
+
+ Hybrid Feature
+    class HybridDecorator extends VehicleDecorator {
+
+        public HybridDecorator(Vehicle vehicle) {
+            super(vehicle);
+        }
+
+        @Override
+        public String getDescription() {
+            return vehicle.getDescription() + " + Hybrid System";
+        }
+    }
+
+
+5. Client
+
+    public class Main {
+
+        public static void main(String[] args) {
+
+            Vehicle car = new BasicCar();
+            System.out.println(car.getDescription());
+
+            Vehicle electricCar =
+                    new ElectricDecorator(new BasicCar());
+            System.out.println(electricCar.getDescription());
+
+            Vehicle hybridCar =
+                    new HybridDecorator(new BasicCar());
+            System.out.println(hybridCar.getDescription());
+        }
+    }
+
+
+Output
+Basic Car
+Basic Car + Electric System
+Basic Car + Hybrid System
+
+
+UML class diagram:-
+----------------------
+              Vehicle
+                 ^
+                 |
+        +----------------+
+        |    BasicCar    |
+        +----------------+
+
+              Vehicle
+                 ^
+                 |
+      +----------------------+
+      | VehicleDecorator     |
+      +----------------------+
+                ^
+        ---------|---------------
+        |                       |
+  ElectricDecorator     HybridDecorator

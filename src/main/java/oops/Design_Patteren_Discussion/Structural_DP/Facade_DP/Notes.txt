@@ -1,0 +1,98 @@
+Facade Pattern Cheat Sheet
+--------------------------------------------
+
+Intent
+    Provide a single simplified interface to a complex subsystem.
+
+Structure
+
+Instead of:
+
+    Engine engine = new Engine();
+    FuelInjector injector = new FuelInjector();
+    Battery battery = new Battery();
+
+    battery.on();
+    injector.inject();
+    engine.start();
+
+Facade design 
+
+    Client does:
+
+    CarFacade car = new CarFacade();
+    car.startCar();
+
+
+Identify Facade Questions
+----------------------------------
+Look for phrases like:
+
+    "Simplify usage of multiple services"
+    "Provide a unified interface"
+    "Hide subsystem complexity"
+    "Client should interact with only one class"
+
+Then Facade is the answer.
+
+
+Generic Template
+
+Subsystems
+
+class CPU {
+    public void start() {
+        System.out.println("CPU Started");
+    }
+}
+
+class Memory {
+    public void load() {
+        System.out.println("Memory Loaded");
+    }
+}
+
+class HardDisk {
+    public void read() {
+        System.out.println("Disk Read");
+    }
+}
+
+Facade make job easier 
+------------------------
+public class ComputerFacade {
+
+    private CPU cpu;
+    private Memory memory;
+    private HardDisk disk;
+
+    public ComputerFacade() {
+        this.cpu = new CPU();
+        this.memory = new Memory();
+        this.disk = new HardDisk();
+    }
+
+    public void startComputer() {
+        memory.load();
+        disk.read();
+        cpu.start();
+    }
+}
+
+Client:-
+------------
+ ComputerFacade cf = new ComputerFacade();
+ cf.startComputer();
+
+ public class ImageEditingManager {
+
+    private ImageEditingFacade imageEditingFacade;
+
+    public ImageEditingManager(ImageEditingFacade imageEditingFacade) {
+        this.imageEditingFacade = imageEditingFacade;
+    }
+
+    public void editImage(String imagePath, String filterType, int brightness) {
+        imageEditingFacade.editImage(imagePath, filterType, brightness);
+    }
+}
