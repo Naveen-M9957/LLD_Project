@@ -1,0 +1,76 @@
+Singleton DP 
+==========================
+Singleton = One Principal for entire school.
+
+1. Singleton Pattern
+What Problem Does It Solve?
+
+Suppose your application has:
+
+* Logger
+* Configuration Manager
+* Cache Manager
+* Database Connection Pool Manager
+
+You want exactly ONE object throughout the application.
+
+Template 
+-----------------------------
+class Singleton {
+    private static volatile Singleton instance;
+    private Singleton() {}
+    public static Singleton getInstance() {
+        if(instance == null) {
+            synchronized(Singleton.class) {
+                if(instance == null) {
+                    instance = new Singleton();
+                }
+            }
+        }
+        return instance;
+    }
+}
+
+Why volatile?
+
+Most Interview Asked Question
+ANS: Without: volatile JVM can reorder instructions.
+
+
+Best Singleton: Enum
+---------------------------------------------
+Joshua Bloch recommendation.
+
+public enum AppConfig {
+    INSTANCE;
+    public void printConfig() {
+        System.out.println("printConfig");
+    }
+}
+
+usage: AppConfig.INSTANCE.work();
+
+public class Main {
+
+    public static void main(String[] args) {
+
+        AppConfig config1 = AppConfig.INSTANCE;
+        AppConfig config2 = AppConfig.INSTANCE;
+
+        config1.printConfig();
+
+        System.out.println(config1 == config2);
+    }
+}
+
+
+Why Enum Singleton Is Best?
+Handles automatically:
+
+✅ Thread Safety
+
+✅ Serialization
+
+✅ Reflection Protection
+
+✅ Simpler code
