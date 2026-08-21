@@ -1,0 +1,11 @@
+
+Requirements:-
+-----------------
+1. Game has a board size 3x3 (configuraible)
+2. 2 player (N-1) can participate game 
+3. unique symbols can be assigned to each play (usually X and O -- however it should be able to configurebele)
+4. move support to bot and human stretegy 
+5. winning stretegy (horizontal, verticle, diagonal)
+6. draw 
+7. undo and multiple undo 
+
