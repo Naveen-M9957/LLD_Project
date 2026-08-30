@@ -1,0 +1,97 @@
+Tables:
+
+Parking_Lot
+* parking_lot_id
+* name
+* address
+
+Floor
+* floor_id
+* floor_number
+* parking_lot_id (Foreign Key to Parking_Lot.parking_lot_id)
+
+Parking_Spot
+* spot_id
+* spot_type
+* status
+* floor_id (Foreign Key to Floor.floor_id)
+
+Vehicle
+* vehicle_number
+* vehicle_type
+* Primary Key(vehicle_number)
+
+Gate
+* gate_id
+* gate_type
+* parking_lot_id (Foreign Key to Parking_Lot.parking_lot_id)
+
+Ticket
+* ticket_id
+* entry_time
+* entry_gate_id
+* id (Foreign Key to operator_id.operator_id)
+* vehicle_number (Foreign Key to Vehicle.vehicle_number)
+* spot_id (Foreign Key to Parking_Spot.spot_id)
+* floor_id (Foreign Key to Floor.floor_id)
+* entry_gate_id (Foreign Key to Entry_Gate.gate_id)
+
+Bill
+* bill_id
+* ticket_id (Foreign Key to Ticket.ticket_id)
+* exit_time
+* exit_gate_id
+* amount
+
+Payment
+* payment_id
+* bill_id (Foreign Key to Bill.bill_id)
+* amount
+* payment_status
+* payment_gateway
+* payment_time
+
+Parking_Operator
+* operator_id
+* name
+* gate_id
+
+Pricing_Strategy
+* pricing_strategy_id
+* vehicle_type
+* price_per_hour
+
+Pricing_Rule
+* rule_id
+* vehicle_type
+* start_hour
+* end_hour
+* price_per_hour
+
+
+Foreign Keys:
+* Floor(parking_lot_id) refers Parking_Lot(parking_lot_id)
+* Parking_Spot(floor_id) refers Floor(floor_id)
+* Entry_Gate(parking_lot_id) refers Parking_Lot(parking_lot_id)
+* Exit_Gate(parking_lot_id) refers Parking_Lot(parking_lot_id)
+* Ticket(vehicle_number) refers Vehicle(vehicle_number)
+* Ticket(spot_id) refers Parking_Spot(spot_id)
+* Ticket(floor_id) refers Floor(floor_id)
+* Ticket(entry_gate_id) refers Entry_Gate(gate_id)
+* Bill(ticket_id) refers Ticket(ticket_id)
+* Payment(bill_id) refers Bill(bill_id)
+
+
+Cardinality of Relations:
+* Between Parking_Lot and Floor -> 1:M
+* Between Floor and Parking_Spot -> 1:M
+* Between Vehicle and Ticket -> 1:M
+* Between Parking_Spot and Ticket -> 1:M
+* Between Entry_Gate and Ticket -> 1:M
+* Between Ticket and Bill -> 1:1
+* Between Bill and Payment -> 1:1
+* Between Parking_Lot and Gate -> 1:M
+* Between Gate and Parking_Operator -> 1:M
+* Between Parking_Operator and Ticket -> 1:M
+* Between Vehicle and Parking_Spot -> M:M
+* Between Gate and Ticket -> 1:M

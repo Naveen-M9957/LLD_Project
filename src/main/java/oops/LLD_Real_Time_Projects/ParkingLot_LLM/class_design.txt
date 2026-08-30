@@ -1,0 +1,255 @@
+// ===================== ENUMS =====================
+
+enum VehicleType {
+    BIKE,
+    CAR,
+    TRUCK
+}
+
+enum SpotStatus {
+    AVAILABLE,
+    OCCUPIED
+}
+
+enum PaymentStatus {
+    SUCCESS,
+    FAILED,
+    PENDING
+}
+
+// ===================== PARKING LOT =====================
+
+class ParkingLot {
+
+    attributes:
+    int parkingLotId;
+    List floors;
+    List entryGates;
+    List exitGates;
+
+    methods:
+    addFloor(Floor floor): void
+    removeFloor(int floorId): void
+    addEntryGate(EntryGate gate): void
+    addExitGate(ExitGate gate): void
+}
+
+// ===================== FLOOR =====================
+
+class Floor {
+
+    attributes:
+    int floorId;
+    List parkingSpots;
+
+    methods:
+    addSpot(ParkingSpot spot): void
+    removeSpot(int spotId): void
+    getAvailableSpots(): List
+}
+
+// ===================== VEHICLE =====================
+
+abstract class Vehicle {
+
+    attributes:
+    String vehicleNumber;
+    VehicleType vehicleType;
+
+    methods:
+    String getVehicleNumber()
+    VehicleType getVehicleType()
+}
+
+class Bike extends Vehicle {
+}
+
+class Car extends Vehicle {
+}
+
+class Truck extends Vehicle {
+}
+
+// ===================== PARKING SPOT =====================
+
+abstract class ParkingSpot {
+
+    attributes:
+    int spotId;
+    SpotStatus status;
+    Vehicle parkedVehicle;
+
+    methods:
+    boolean isAvailable()
+    void parkVehicle(Vehicle vehicle)
+    void removeVehicle()
+    abstract boolean canPark(Vehicle vehicle)
+}
+
+class BikeSpot extends ParkingSpot {
+
+    methods:
+    boolean canPark(Vehicle vehicle)
+}
+
+class CarSpot extends ParkingSpot {
+
+    methods:
+    boolean canPark(Vehicle vehicle)
+}
+
+class TruckSpot extends ParkingSpot {
+
+    methods:
+    boolean canPark(Vehicle vehicle)
+}
+
+// ===================== GATES =====================
+
+class EntryGate {
+
+    attributes:
+    int gateId;
+
+    methods:
+    int getGateId()
+}
+
+class ExitGate {
+
+    attributes:
+    int gateId;
+
+    methods:
+    int getGateId()
+}
+
+// ===================== OPERATOR =====================
+
+class ParkingOperator {
+
+    attributes:
+    int operatorId;
+    String name;
+
+    methods:
+    Ticket createTicket(Vehicle vehicle)
+    Bill generateBill(Ticket ticket)
+}
+
+// ===================== TICKET =====================
+
+class Ticket {
+
+    attributes:
+    int ticketId;
+    Date entryTime;
+    Vehicle vehicle;
+    ParkingSpot parkingSpot;
+    int  floorId;
+    EntryGate entryGate;
+
+    methods:
+    int getTicketId()
+    Date getEntryTime()
+}
+
+// ===================== BILL =====================
+
+class Bill {
+
+    attributes:
+    int billId;
+    Ticket ticket;
+    Date exitTime;
+    double amount;
+
+    methods:
+    double getAmount()
+}
+
+// ===================== PARKING STRATEGY =====================
+
+interface ParkingStrategy {
+
+    ParkingSpot findSpot(Vehicle vehicle, List floors);
+}
+
+class NearestParkingStrategy  implements ParkingStrategy {
+
+    methods:
+    ParkingSpot findSpot(Vehicle vehicle, List floors);
+}
+
+// ===================== PRICING STRATEGY =====================
+
+interface PricingStrategy {
+
+    double calculatePrice(Ticket ticket,Date exitTime);
+}
+
+class BikePricingStrategy implements PricingStrategy {
+
+    methods:
+    double calculatePrice(Ticket ticket,Date exitTime);
+}
+
+class CarPricingStrategy implements PricingStrategy {
+
+    methods:
+    double calculatePrice(Ticket ticket,Date exitTime);
+}
+
+class TruckPricingStrategy implements PricingStrategy {
+
+    methods:
+    double calculatePrice(Ticket ticket,Date exitTime);
+}
+
+// ===================== PARKING MANAGER =====================
+
+class ParkingLotManager {
+
+    attributes:
+    ParkingLot parkingLot;
+    ParkingStrategy parkingStrategy;
+
+    methods:
+    ParkingSpot assignSpot(Vehicle vehicle);
+
+    void releaseSpot(ParkingSpot spot);
+}
+
+// ===================== BILLING SERVICE =====================
+
+class BillingService {
+
+    attributes:
+    PricingStrategy pricingStrategy;
+
+    methods:
+    Bill generateBill(Ticket ticket, Date exitTime );
+}
+
+// ===================== PAYMENT =====================
+
+interface PaymentGateway {
+
+    PaymentStatus pay(double amount );
+}
+
+class RazorpayGateway
+        implements PaymentGateway {
+
+    methods:
+    PaymentStatus pay(double amount);
+}
+
+class PaymentService {
+
+    attributes:
+    PaymentGateway paymentGateway;
+
+    methods:
+    PaymentStatus processPayment(Bill bill);
+}
