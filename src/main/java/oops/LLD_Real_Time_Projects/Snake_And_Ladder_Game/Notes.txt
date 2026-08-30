@@ -1,0 +1,13 @@
+Snake and Ladder Game
+---------------------------------
+
+when  you look at the board what you can see...
+1. Game should allow minimum one player
+2. game should  have board size 10x10
+3. player positionn is startfrom 0
+4. Dicewill produce random value 
+5. Game should track current player and allow next  turn to other player 
+6. player should move the positionn  according to  dice  value 
+7. snake  behaviour to  move player to  downnwards
+8. Ladder behaviour to move player to  Upwards 
+9. determine Winner  
