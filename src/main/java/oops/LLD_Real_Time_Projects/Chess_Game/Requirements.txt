@@ -1,0 +1,488 @@
+1.  Create a representation for the chessboard.
+2.  Represent all the pieces: King, Queen, Bishop, Knight, Rook, and Pawn.
+3.  Differentiate the pieces based on color: Black and White.
+4.  Each piece should have a method to determine its legal moves based on its current position.
+5.  The chessboard should have a method to move a piece from one position to another.
+6.  There should be a way to check the status of the game, e.g., ongoing, check, checkmate, or stalemate.
+7.  The game should support special moves: castling, pawn promotion, and en passant.
+8.  Implement a player class, where each player has a color and a set of pieces.
+9.  Include a game class that will handle turn-based gameplay between two players.
+10.  The game should have a method to capture and remove a piece from the board.
+
+Step 1: Understand the Game
+Game
+ |
+ +-- Board
+ |
+ +-- Players
+ |
+ +-- Pieces
+ |
+ +-- Rules
+
+Requirement 1 : Create a representation for the chessboard.
+    What object represents the board?
+    ✅ ChessBoard
+    class ChessBoard
+
+Requirement 2
+    Represent all pieces
+    Pieces are:
+        King    (RAJA)
+        Queen   (MANTRI)
+        Bishop  (VANTE)
+        Knight  (HORSE)
+        Rook    (ELEPHANT)
+        Pawn    (SOLIDERS)
+
+All share common properties:
+    color
+    position
+    captured
+
+So create parent class:
+    abstract class Piece
+    King extends Piece
+    Queen extends Piece
+    Bishop extends Piece
+    Knight extends Piece
+    Rook extends Piece
+    Pawn extends Piece
+
+
+Requirement 3
+    Differentiate pieces based on color
+    Color itself is not a class.
+    It's just a property.
+    enum Color { WHITE, BLACK}
+
+Requirement 4
+    Each piece should determine legal moves
+    Who knows how a bishop moves?
+    ✅ Bishop
+    Not Board.
+    Not Game.
+
+abstract class Piece {
+    abstract List<Position>  getLegalMoves(ChessBoard board);
+}
+
+class Bishop extends Piece {
+    @Override
+    public List<Position>  getLegalMoves(ChessBoard board) {
+
+    }
+}
+
+Requirement 5
+    Board should move pieces
+    Board owns the squares.
+    SO:
+    class ChessBoard {
+        movePiece(Position from,  Position to);
+    }
+
+Requirement 6
+    Check game status
+    Status isn't a separate object.
+    It's a state of Game.
+
+    enum GameStatus {
+        ACTIVE,
+        CHECK,
+        CHECKMATE,
+        STALEMATE
+    }
+
+    Game contains:
+        GameStatus status;
+
+
+Requirement 7
+    Castling, Promotion, En Passant
+    This is where most people create unnecessary entities.
+    Let's think.
+
+    Castling
+    Castling is an action between: KING AND ROOK (exchange the places)
+
+    Usually implemented as:
+    class Move {
+        MoveType type;
+    }
+
+    enum MoveType {
+        NORMAL,
+        CASTLING,
+        PROMOTION,
+        EN_PASSANT
+    }
+
+    Promotion
+        Promotion needs a choice:
+            Pawn -> Queen
+            Pawn -> Knight
+            Pawn -> Bishop
+            Pawn -> Rook
+        
+        class PromotionMove extends Move {
+            Piece promotedPiece;
+        }
+
+Requirement 8
+
+Player
+
+Definitely an entity.
+    class Player
+
+    Attributes:
+        Color color;
+        List<Piece> activePieces;
+        List<Piece> capturedPieces;
+
+
+Requirement 9
+    Game Class
+    Main controller.
+    class ChessGame
+
+Responsibilities
+    start game
+    switch turn
+    validate move
+    check checkmate
+    maintain status
+    declare winner
+
+
+Requirement 10
+    Capture and remove piece
+
+    Who should do this?
+    Board.
+    Because board knows occupancy.
+
+    removePiece(Position pos);  or   capturePiece(Piece piece);
+
+
+
+Class diagram
+=================================================
+// =========================================================
+// ENUMS
+// =========================================================
+
+enum Color {
+  WHITE,
+  BLACK
+}
+
+enum GameStatus {
+  ACTIVE,
+  CHECK,
+  CHECKMATE,
+  STALEMATE,
+  DRAW,
+  RESIGNED
+}
+
+enum PieceType {
+  KING,
+  QUEEN,
+  ROOK,
+  BISHOP,
+  KNIGHT,
+  PAWN
+}
+
+enum MoveType {
+  NORMAL,
+  CAPTURE,
+  CASTLING,
+  EN_PASSANT,
+  PROMOTION
+}
+
+
+// =========================================================
+// GAME
+// =========================================================
+class Game {
+  attributes:
+    players: Player[2]
+    currentPlayer: Player
+    board: Board
+    moveHistory: List<Move>
+    status: GameStatus
+    winner: Player
+    moveRuleManager: MoveRuleManager
+
+  methods:
+    startNewGame(): void
+    makeMove(move: Move): boolean
+    validateMove(move: Move): boolean
+    switchPlayer(): void
+    checkWinner(): Player
+    checkDraw(): boolean
+    getCurrentState(): String
+    resign(player: Player): void
+    getGameRules(): String
+}
+
+
+// =========================================================
+// PLAYER
+// =========================================================
+
+class Player {
+  attributes:
+    id: long
+    name: String
+    color: Color
+
+  methods:
+    getId(): long
+    getName(): String
+    getColor(): Color
+}
+
+
+// =========================================================
+// BOARD
+// =========================================================
+
+class Board {
+
+  attributes:
+    cells: Cell[8][8]
+
+  methods:
+    initializeBoard(): void
+    getCell(position: Position): Cell
+    placePiece(piece: Piece,  position: Position): void
+    movePiece(source: Position,destination: Position): void
+    isValidPosition(position: Position): boolean
+    resetBoard(): void
+}
+
+
+// =========================================================
+// CELL
+// =========================================================
+
+class Cell {
+
+  attributes:
+    position: Position
+    piece: Piece
+
+  methods:
+    getPosition(): Position
+    getPiece(): Piece
+    setPiece(piece: Piece): void
+    isEmpty(): boolean
+}
+
+
+// =========================================================
+// POSITION
+// =========================================================
+
+class Position {
+
+  attributes:
+    row: int
+    column: int
+
+  methods:
+    getRow(): int
+    getColumn(): int
+    equals(position: Position): boolean
+}
+
+
+// =========================================================
+// ABSTRACT PIECE
+// =========================================================
+
+abstract class Piece {
+
+  attributes:
+    color: Color
+    pieceType: PieceType
+    isCaptured: boolean
+
+  methods:
+    canMove(board: Board, source: Position, destination: Position): boolean
+    getColor(): Color
+    getPieceType(): PieceType
+    isCaptured(): boolean
+}
+
+
+// =========================================================
+// KING
+// =========================================================
+
+class King extends Piece {
+
+  attributes:
+    hasMoved: boolean
+
+  methods:
+    canMove(board: Board, source: Position, destination: Position): boolean
+    canCastle(): boolean
+}
+
+
+// =========================================================
+// QUEEN
+// =========================================================
+
+class Queen extends Piece {
+
+  methods:
+    canMove(board: Board, source: Position, destination: Position): boolean
+}
+
+
+// =========================================================
+// ROOK
+// =========================================================
+
+class Rook extends Piece {
+
+  attributes:
+    hasMoved: boolean
+
+  methods:
+    canMove(board: Board, source: Position, destination: Position): boolean
+}
+
+
+// =========================================================
+// BISHOP
+// =========================================================
+
+class Bishop extends Piece {
+
+  methods:
+    canMove(board: Board,source: Position, destination: Position): boolean
+}
+
+
+// =========================================================
+// KNIGHT
+// =========================================================
+
+class Knight extends Piece {
+
+  methods:
+    canMove(board: Board, source: Position, destination: Position): boolean
+}
+
+
+// =========================================================
+// PAWN
+// =========================================================
+
+class Pawn extends Piece {
+
+  attributes:
+    hasMoved: boolean
+
+  methods:
+
+    canMove(board: Board,source: Position,destination: Position): boolean
+    canPromote(): boolean
+    canEnPassant(): boolean
+}
+
+
+// =========================================================
+// MOVE
+// =========================================================
+
+class Move {
+
+  attributes:
+    player: Player
+    source: Position
+    destination: Position
+    movedPiece: Piece
+    capturedPiece: Piece
+    moveType: MoveType
+    timestamp: Date
+
+  methods:
+    getSource(): Position
+    getDestination(): Position
+    getPlayer(): Player
+    getMovedPiece(): Piece
+    getCapturedPiece(): Piece
+    getMoveType(): MoveType
+}
+
+
+// =========================================================
+// MOVE RULE INTERFACE
+// =========================================================
+
+interface MoveRule {
+
+  methods:
+    isApplicable(move: Move): boolean
+    execute(move: Move): void
+}
+
+
+// =========================================================
+// CASTLING RULE
+// =========================================================
+
+class CastlingRule implements MoveRule {
+
+  methods:
+    isApplicable(move: Move): boolean
+    execute(move: Move): void
+}
+
+
+// =========================================================
+// PROMOTION RULE
+// =========================================================
+
+class PromotionRule implements MoveRule {
+
+  methods:
+    isApplicable(move: Move): boolean
+    execute(move: Move): void
+}
+
+
+// =========================================================
+// EN PASSANT RULE
+// =========================================================
+
+class EnPassantRule implements MoveRule {
+
+  methods:
+    isApplicable(move: Move): boolean
+    execute(move: Move): void
+}
+
+
+// =========================================================
+// MOVE RULE MANAGER
+// =========================================================
+
+class MoveRuleManager {
+
+  attributes:
+    rules: List<MoveRule>
+
+  methods:
+    addRule(rule: MoveRule): void
+    applyRules(move: Move): void
+}

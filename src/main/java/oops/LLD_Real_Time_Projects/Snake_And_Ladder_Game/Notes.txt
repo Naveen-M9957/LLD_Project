@@ -2,12 +2,133 @@ Snake and Ladder Game
 ---------------------------------
 
 when  you look at the board what you can see...
-1. Game should allow minimum one player
-2. game should  have board size 10x10
-3. player positionn is startfrom 0
-4. Dicewill produce random value 
-5. Game should track current player and allow next  turn to other player 
-6. player should move the positionn  according to  dice  value 
-7. snake  behaviour to  move player to  downnwards
-8. Ladder behaviour to move player to  Upwards 
-9. determine Winner  
+
+Design a class diagram for the traditional game of Snake and Ladder with the following requirements:
+
+1. Board: A standard Snake and Ladder board contains 100 cells numbered from 1 to 100.
+2. Players: The game can be played by 2-4 players.
+3. Dice: The game will have a standard dice that can roll numbers between 1 to 6.
+4. Snakes: Snakes will have a start point (mouth) and an endpoint (tail). 
+If a player lands on the mouth, they are taken down to the tail.
+5. Ladders: Ladders will have a start point (bottom) and an endpoint (top). 
+If a player lands on the bottom, they climb up to the top.
+6. Turns: Players take turns in a round-robin fashion to roll the dice and move.
+7. Winning Condition: A player wins if they land on the 100th cell exactly. 
+For example, if a player is on the 99th cell, they must roll a 1 to win.​‌
+
+class Board : List<Snake> snake, List<Ladder> ladder, List<Cell> cell, List<Player> Players, int playerMove
+class Cell : int number
+class Player: id, name 
+class Dice : const min =1, max=6, roll()
+class Snake: int sp, int ep
+class Ladder: int sp, int ep
+cladd Move: int cs 
+class Winning: int winnerId
+
+
+class SnakeLadderGame {
+
+  attributes:
+
+    board: Board
+    dice: Dice
+    players: Queue<Player>
+    currentPlayer: Player
+    winner: Player
+    isGameOver: Boolean
+
+  methods:
+
+    startGame(): void
+    playTurn(): void
+    rollDice(): int
+    movePlayer(player: Player, diceValue: int): void
+    checkWinner(player: Player): Boolean
+    switchTurn(): void
+    getCurrentPlayer(): Player
+    getWinner(): Player
+    isGameFinished(): Boolean
+}
+
+class Board {
+
+  attributes:
+
+    cells: List<Cell>
+    snakes: List<Snake>
+    ladders: List<Ladder>
+
+  methods:
+
+    initializeBoard(): void
+    getCell(cellNumber: int): Cell
+    getFinalPosition(position: int): int
+    addSnake(snake: Snake): void
+    addLadder(ladder: Ladder): void
+    isValidPosition(position: int): Boolean
+}
+
+class Cell {
+
+  attributes:
+
+    number: int
+
+  methods:
+
+    getNumber(): int
+}
+
+class Player {
+
+  attributes:
+
+    id: int
+    name: String
+    currentPosition: int
+
+  methods:
+
+    move(steps: int): void
+    setPosition(position: int): void
+    getPosition(): int
+    hasWon(): Boolean
+}
+
+class Dice {
+
+  attributes:
+
+    MIN_VALUE: int = 1
+    MAX_VALUE: int = 6
+
+  methods:
+
+    roll(): int
+}
+
+class Snake {
+
+  attributes:
+
+    start: int      // Mouth
+    end: int        // Tail
+
+  methods:
+
+    getStart(): int
+    getEnd(): int
+}
+
+class Ladder {
+
+  attributes:
+
+    start: int      // Bottom
+    end: int        // Top
+
+  methods:
+
+    getStart(): int
+    getEnd(): int
+}

@@ -4,22 +4,22 @@ import java.util.*;
 import main.java.oops.LLD_Real_Time_Projects.ParkingLot_LLM.src.java.models.enums.VehicleType;
 
 public class ParkingLot {
-    int parking_lot_id;
+    String name;
     List<Floor> floors;
     List<Gate> gates;
 
-    public ParkingLot(int parking_lot_id, List<Floor> floors, List<Gate> gates) {
-        this.parking_lot_id = parking_lot_id;
+    public ParkingLot(String name, List<Floor> floors, List<Gate> gates) {
+        this.name = name;
         this.floors = floors;
         this.gates = gates;
     }
 
-    public int getParking_lot_id() {
-        return parking_lot_id;
+    public String getName() {
+        return name;
     }
 
-    public void setParking_lot_id(int parking_lot_id) {
-        this.parking_lot_id = parking_lot_id;
+    public void setName(String name) {
+        this.name = name;
     }
 
     public List<Floor> getFloors() {
