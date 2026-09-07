@@ -1,0 +1,430 @@
+
+Requirements:
+---------------------------
+Design a class diagram for BookMyShow Requirements: 
+
+1. We will have multiple cities. 
+2. Each city has mulitple theatres. 
+3. Each theatre has multiple screens. 
+4. Each screen has multiple seats. 
+5. There are different types of seats: 
+    PLATINUM, GOLD, SILVER. 
+6. Each screen will have multiple shows. 
+7. Every show will be for a movie and will have a start time and end time.
+8. Each show depending upon the day, time and seat type will have different prices. 
+9. Movies, shows and screens will support features like 
+    2D, 3D, DOLBY_IMAX, DOLBY_VISION etc. 
+10. We integrate with Razorpay to handle payments. 
+11. Users should be able to book multiple seats for a show via the app by paying for them at the time of booking.
+
+
+// =====================================================
+// BASE ENTITY
+// =====================================================
+
+abstract class BaseEntity {
+
+  attributes:
+
+    id: long
+
+    createdAt: String
+
+    updatedAt: String
+}
+
+
+// =====================================================
+// ENUMS
+// =====================================================
+
+enum SeatType {
+
+  PLATINUM,
+
+  GOLD,
+
+  SILVER
+}
+
+enum Feature {
+
+  TWO_D,
+
+  THREE_D,
+
+  DOLBY_IMAX,
+
+  DOLBY_VISION
+}
+
+enum BookingStatus {
+
+  CREATED,
+
+  PENDING_PAYMENT,
+
+  CONFIRMED,
+
+  CANCELLED
+}
+
+enum PaymentStatus {
+
+  PENDING,
+
+  SUCCESS,
+
+  FAILED,
+
+  REFUNDED
+}
+
+
+// =====================================================
+// BOOK MY SHOW
+// =====================================================
+
+class BookMyShow extends BaseEntity {
+
+  attributes:
+
+    cities: List<City>
+
+    movies: List<Movie>
+
+  methods:
+
+    getCities(): List<City>
+
+    getMovies(): List<Movie>
+}
+
+
+// =====================================================
+// CITY
+// =====================================================
+
+class City extends BaseEntity {
+
+  attributes:
+
+    name: String
+
+    theatres: List<Theatre>
+
+  methods:
+
+    getName(): String
+
+    getTheatres(): List<Theatre>
+}
+
+
+// =====================================================
+// THEATRE
+// =====================================================
+
+class Theatre extends BaseEntity {
+
+  attributes:
+
+    name: String
+
+    address: String
+
+    screens: List<Screen>
+
+  methods:
+
+    getName(): String
+
+    getAddress(): String
+
+    getScreens(): List<Screen>
+}
+
+
+// =====================================================
+// SCREEN
+// =====================================================
+
+class Screen extends BaseEntity {
+
+  attributes:
+
+    name: String
+
+    seats: List<Seat>
+
+    shows: List<Show>
+
+    supportedFeatures: List<Feature>
+
+  methods:
+
+    getName(): String
+
+    getSeats(): List<Seat>
+
+    getShows(): List<Show>
+
+    getSupportedFeatures(): List<Feature>
+}
+
+
+// =====================================================
+// SEAT
+// =====================================================
+
+class Seat extends BaseEntity {
+
+  attributes:
+
+    seatNumber: String
+
+    rowNumber: String
+
+    seatType: SeatType
+
+  methods:
+
+    getSeatNumber(): String
+
+    getRowNumber(): String
+
+    getSeatType(): SeatType
+}
+
+
+// =====================================================
+// MOVIE
+// =====================================================
+
+class Movie extends BaseEntity {
+
+  attributes:
+
+    name: String
+
+    languages: List<String>
+
+    genre: String
+
+    imdbRating: double
+
+    summary: String
+
+    supportedFeatures: List<Feature>
+
+  methods:
+
+    getMovieName(): String
+
+    getSupportedLanguages(): List<String>
+
+    getGenre(): String
+
+    getRating(): double
+
+    getSummary(): String
+
+    getSupportedFeatures(): List<Feature>
+}
+
+
+// =====================================================
+// SHOW
+// =====================================================
+
+class Show extends BaseEntity {
+
+  attributes:
+
+    movie: Movie
+
+    screen: Screen
+
+    startTime: String
+
+    endTime: String
+
+    supportedFeatures: List<Feature>
+
+    showSeats: List<ShowSeat>
+
+    pricing: List<ShowSeatPrice>
+
+  methods:
+
+    getMovie(): Movie
+
+    getScreen(): Screen
+
+    getStartTime(): String
+
+    getEndTime(): String
+
+    getShowSeats(): List<ShowSeat>
+
+    getPricing(): List<ShowSeatPrice>
+}
+
+
+// =====================================================
+// SHOW SEAT
+// Represents seat availability for a specific show
+// =====================================================
+
+class ShowSeat extends BaseEntity {
+
+  attributes:
+
+    seat: Seat
+
+    show: Show
+
+    booked: boolean
+
+  methods:
+
+    getSeat(): Seat
+
+    isBooked(): boolean
+
+    markBooked(): void
+
+    markAvailable(): void
+}
+
+
+// =====================================================
+// SHOW SEAT PRICE
+// Different pricing per show & seat type
+// =====================================================
+
+class ShowSeatPrice extends BaseEntity {
+
+  attributes:
+
+    seatType: SeatType
+
+    price: double
+
+  methods:
+
+    getSeatType(): SeatType
+
+    getPrice(): double
+}
+
+
+// =====================================================
+// USER
+// =====================================================
+
+class User extends BaseEntity {
+
+  attributes:
+
+    name: String
+
+    email: String
+
+    mobileNumber: String
+
+  methods:
+
+    getName(): String
+
+    getEmail(): String
+
+    getMobileNumber(): String
+}
+
+
+// =====================================================
+// BOOKING
+// =====================================================
+
+class Booking extends BaseEntity {
+
+  attributes:
+
+    user: User
+
+    show: Show
+
+    bookedSeats: List<ShowSeat>
+
+    totalAmount: double
+
+    bookingStatus: BookingStatus
+
+    payment: Payment
+
+  methods:
+
+    calculateAmount(): double
+
+    confirmBooking(): void
+
+    cancelBooking(): void
+
+    getBookedSeats(): List<ShowSeat>
+
+    getStatus(): BookingStatus
+}
+
+
+// =====================================================
+// PAYMENT
+// =====================================================
+
+class Payment extends BaseEntity {
+
+  attributes:
+
+    booking: Booking
+
+    amount: double
+
+    paymentStatus: PaymentStatus
+
+    transactionId: String
+
+    paymentGateway: PaymentGateway
+
+  methods:
+
+    processPayment(): boolean
+
+    getTransactionId(): String
+
+    getPaymentStatus(): PaymentStatus
+}
+
+
+// =====================================================
+// PAYMENT GATEWAY
+// =====================================================
+
+interface PaymentGateway {
+
+  methods:
+
+    pay(amount: double): boolean
+}
+
+
+// =====================================================
+// RAZORPAY IMPLEMENTATION
+// =====================================================
+
+class RazorpayGateway
+        implements PaymentGateway {
+
+  methods:
+
+    pay(amount: double): boolean
+}
